@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const postSchema = new mongoose.Schema({
     author: {
@@ -11,8 +12,7 @@ const postSchema = new mongoose.Schema({
         required: true,
     },
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    comments: [{ type: chema.Types.ObjectId, ref: "Comment" }],
 }, { timestamps: true });
 
 const Post = mongoose.model("posts", postSchema);
-module.exports = Post;
+module.exports = { Post };
