@@ -59,6 +59,9 @@ const dislikePost = async(req, res) => {
     }
 };
 
+const commentPost = async(req, res) => {
+
+}
 
 
-module.exports = { createPost, likePost, dislikePost };
+module.exports = { createPost, likePost, dislikePost, commentPost };
