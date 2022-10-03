@@ -4,9 +4,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const cors = require("cors");
+const compression = require("compression");
 
 const app = express();
-
 //DB connection
 mongoose.connect(process.env.MONGO_DB_URI);
 mongoose.connection.on("connected", () => {
@@ -24,6 +24,7 @@ app.get("/", (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
+app.use(compression());
 
 
 //server listening
