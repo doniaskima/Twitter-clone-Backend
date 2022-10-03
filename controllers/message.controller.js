@@ -2,11 +2,7 @@ const messageModels = require("../models/message.models");
 
 const createMessage = async(req, res) => {
     const newMessage = new messageModels({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        avatar: req.body.avatar,
-        email: req.body.email,
-        password: req.body.password,
+
     });
 
     try {
