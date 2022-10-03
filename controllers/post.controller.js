@@ -1,61 +1,24 @@
-const postModels = require("../models/post.models");
+const { User } = require("../models/user.model");
+const { Post } = require("../models/post.model");
+
 
 const createPost = async(req, res) => {
-    const newPost = new postModels({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        avatar: req.body.avatar,
-        email: req.body.email,
-        password: req.body.password,
-    });
-
+    const { author, content } = req.body;
     try {
-        const savedPost = await newPost.save();
-        return res.status(201).json(savedPost);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-const getPosts = async(req, res) => {
-    try {
-        const posts = await postModels.find();
-        return res.status(200).json(posts);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-const getPost = async(req, res) => {
-    const post = req.post;
-    try {
-        return res.status(200).json(post);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-
-const deletePost = async(req, res) => {
-    const id = req.post._id;
-    try {
-        const post = await postModels.findByIdAndDelete(id);
-        return res.status(200).json(post);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-const updatePost = async(req, res) => {
-    const id = req.post._id;
-    try {
-        const post = await postModels.findByIdAndUpdate(id, req.body, {
-            new: true,
+        const user = await User.findById(author);
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        let newPost = Post({ author: author, content: content });
+        await newPost.save();
+        return res.status(200).json({ success: true, message: "post created" });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
         });
-        return res.status(200).json(post);
-    } catch (err) {
-        return res.status(500).json(err);
     }
 };
 
-module.exports.getPost = getPost;
-module.exports.getPosts = getPosts;
-module.exports.updatePost = updatePost;
-module.exports.deletePost = deletePost;
-module.exports.createPost = createPost;
+
+module.exports = { createPost };
