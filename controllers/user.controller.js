@@ -122,7 +122,10 @@ const updateCurrentUserDetails = async(req, res) => {
         });
     }
 };
+const follow = async(req, res) => {}
 
+
+const fetchUserPosts = async(req, res) => {}
 
 
 module.exports = {
@@ -130,4 +133,6 @@ module.exports = {
     signup,
     searchById,
     updateCurrentUserDetails,
+    follow,
+    fetchUserPosts,
 };
