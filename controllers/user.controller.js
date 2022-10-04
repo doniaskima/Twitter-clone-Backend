@@ -1,61 +1,46 @@
-const userModels = require("../models/user.models");
+require("dotenv").config();
+const { User } = require("../models/user.model");
+const { Post } = require("../models/post.model");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const createUser = async(req, res) => {
-    const newUser = new userModels({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        avatar: req.body.avatar,
-        email: req.body.email,
-        password: req.body.password,
+const login = async(req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email }).catch((err) => {
+        console.log(err);
     });
 
-    try {
-        const savedUser = await newUser.save();
-        return res.status(201).json(savedUser);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-const getUsers = async(req, res) => {
-    try {
-        const users = await userModels.find();
-        return res.status(200).json(users);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-const getUser = async(req, res) => {
-    const user = req.user;
-    try {
-        return res.status(200).json(user);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-
-const deleteUser = async(req, res) => {
-    const id = req.user._id;
-    try {
-        const user = await userModels.findByIdAndDelete(id);
-        return res.status(200).json(user);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-const updateUser = async(req, res) => {
-    const id = req.user._id;
-    try {
-        const user = await userModels.findByIdAndUpdate(id, req.body, {
-            new: true,
+    if (user) {
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (isPasswordCorrect) {
+            const token = jwt.sign({ id: user._id, name: user.name },
+                process.env.secret
+            );
+            return res.json({
+                success: true,
+                message: "Login Successful",
+                user: user,
+                token: token,
+            });
+        }
+        return res.json({
+            token: null,
+            user: null,
+            success: false,
+            message: "Wrong password, please try again",
         });
-        return res.status(200).json(user);
-    } catch (err) {
-        return res.status(500).json(err);
     }
+    return res.json({
+        token: null,
+        user: null,
+        success: false,
+        message: "No account found with entered email",
+    });
 };
 
-module.exports.getUser = getUser;
-module.exports.getUsers = getUsers;
-module.exports.updateUser = updateUser;
-module.exports.deleteUser = deleteUser;
-module.exports.createUser = createUser;
+
+
+
+module.exports = {
+    login,
+}
