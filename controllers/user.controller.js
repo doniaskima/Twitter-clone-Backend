@@ -169,6 +169,20 @@ const getSingleUserInfo = async(req, res) => {
     }
 }
 
+
+const fetchUserFollowers = async(req, res) => {
+    try {
+        const { user } = req;
+        const followers = await User.find({ _id: { $in: user.followers } },
+            "_id name username"
+        );
+        return res.json({ success: true, followers: followers });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+
 module.exports = {
     login,
     signup,
@@ -176,5 +190,6 @@ module.exports = {
     updateCurrentUserDetails,
     follow,
     fetchUserPosts,
-    getSingleUserInfo
+    getSingleUserInfo,
+    fetchUserFollowers
 };
