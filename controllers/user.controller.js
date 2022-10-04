@@ -149,7 +149,7 @@ const follow = async(req, res) => {
 const fetchUserPosts = async(req, res) => {
     try {
         const { user } = req;
-        const posts = Post.find({ author: user._id });
+        const posts = await Post.find({ author: user._id });
         return res.json({ success: true, posts: posts });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
