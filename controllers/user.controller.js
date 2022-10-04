@@ -122,11 +122,30 @@ const updateCurrentUserDetails = async(req, res) => {
         });
     }
 };
-const follow = async(req, res) => {}
+const follow = async(req, res) => {
+    try {
+        const { targetId, sourceId } = req.body;
+        const targetUser = await User.findById(targetId);
+        if (!targetUser) {
+            return res.json({ success: false, message: "Invalid Target Id" });
+        }
+        const sourceId = await User.findById(sourceId);
+        if (!sourceId) {
+            return res.json({
+                success: false,
+                message: "Invalid Target Id",
+            });
+        }
+        targetUser.followers.push(sourceId);
+        sourceUser.following.push(targetUser);
+        await targetUser.save();
+        await sourceUser.save();
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
 
-
-const fetchUserPosts = async(req, res) => {}
-
+const fetchUserPosts = async(req, res) => {};
 
 module.exports = {
     login,
