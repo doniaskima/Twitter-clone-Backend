@@ -97,28 +97,31 @@ const searchById = async(req, res, next, userId) => {
     }
 };
 
-const updateCurrentUsersDetails = async(req, res) => {
+const updateCurrentUserDetails = async(req, res) => {
     try {
         let userUpdate = req.body;
         let { user } = req;
+
         let search = await User.findOne({ username: userUpdate.username });
+
         if (search && search.email !== user.email) {
             return res.json({
                 success: false,
-                erroressage: "Username already exists",
-
+                errorMessage: "Username already exists",
             });
         }
+
         user = extend(user, userUpdate);
         user = await user.save();
         res.json({ success: true, data: user });
     } catch (err) {
-      success: false,
-      message: "Failed to Update User",
-      errorMessage: err.message,
+        res.json({
+            success: false,
+            message: "Failed to Update User",
+            errorMessage: err.message,
+        });
     }
-}
-
+};
 
 
 
@@ -126,5 +129,5 @@ module.exports = {
     login,
     signup,
     searchById,
-    updateCurrentUsersDetails
+    updateCurrentUserDetails,
 };
