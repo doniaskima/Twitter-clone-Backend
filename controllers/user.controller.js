@@ -1,6 +1,5 @@
 require("dotenv").config();
 const { User } = require("../models/user.model");
-const { Post } = require("../models/post.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -37,10 +36,53 @@ const login = async(req, res) => {
         message: "No account found with entered email",
     });
 };
+const signup = async(req, res) => {
+    const { name, username, email, password } = req.body;
+    const user = await User.findOne({ email: email }).catch((err) => {
+        console.log(err);
+    });
+    if (user) {
+        return res.json({
+            token: null,
+            user: null,
+            success: false,
+            message: "Account with email already exists, Try logging in instead!",
+        });
+    }
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({
+            name: name,
+            username: username,
+            email: email,
+            password: hashedPassword,
+        });
 
+        const savedUser = await newUser.save();
+        const token = jwt.sign({ id: savedUser._id, name: savedUser.name },
+            process.env.secret
+        );
+
+        return res.json({
+            user: savedUser,
+            token: token,
+            success: true,
+            message: "Signed up successfully",
+        });
+    } catch (err) {
+        console.log(err);
+        return res.json({
+            success: false,
+            user: null,
+            token: null,
+            message: err.message,
+        });
+    }
+};
 
 
 
 module.exports = {
     login,
-}
+    signup,
+};
