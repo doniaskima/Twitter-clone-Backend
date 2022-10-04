@@ -79,10 +79,27 @@ const signup = async(req, res) => {
         });
     }
 };
+const searchById = async(req, res, next, userId) => {
+    try {
+        const userObject = await User.findById(userId);
+        if (!userObject) {
+            return res.json({ success: false, massage: "User not found" });
+        }
+        req.user = userObject;
+        next();
+    } catch (error) {
+        res.json({
+            success: false,
+            message: "Failed to Update User",
+            errorMessage: error.message,
+        });
+    }
+};
 
 
 
 module.exports = {
     login,
     signup,
+    searchById
 };
