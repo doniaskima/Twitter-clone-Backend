@@ -156,6 +156,19 @@ const fetchUserPosts = async(req, res) => {
     }
 };
 
+const getSingleUserInfo = async(req, res) => {
+    try {
+        const { user } = req;
+        return res.json({ success: true, user: user })
+    } catch (error) {
+        res.json({
+            success: false,
+            message: "Failed to update User",
+            errorMessage: error.message,
+        })
+    }
+}
+
 module.exports = {
     login,
     signup,
@@ -163,4 +176,5 @@ module.exports = {
     updateCurrentUserDetails,
     follow,
     fetchUserPosts,
+    getSingleUserInfo
 };
