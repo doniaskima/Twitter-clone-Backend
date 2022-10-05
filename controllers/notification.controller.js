@@ -15,42 +15,16 @@ const newNotification = async(targetId, sourceId, type, postId) => {
         console.log(error);
     }
 }
-const getNotifications = async(req, res) => {
-    try {
-        const notifications = await notificationModels.find();
-        return res.status(200).json(notifications);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-const getNotification = async(req, res) => {
-    const notification = req.notification;
-    try {
-        return res.status(200).json(notification);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
 
-const deleteNotification = async(req, res) => {
-    const id = req.notification._id;
+const fetchUserNotifications = async(req, res) => {
     try {
-        const notification = await notificationModels.findByIdAndDelete(id);
-        return res.status(200).json(notification);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-const updateNotification = async(req, res) => {
-    const id = req.notification._id;
-    try {
-        const notification = await notificationModels.findByIdAndUpdate(id, req.body, {
-            new: true,
-        });
-        return res.status(200).json(notification);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
+        const userId = req.params.userId;
+        const user = User.findById(userId);
+        if (!user) {
+            return res.json({ success: false, message: "invalid id, user not found" });
+        }
 
-module.exports = { newNotification };
+    }
+}
+
+module.exports = { newNotification, fetchUserNotifications };
