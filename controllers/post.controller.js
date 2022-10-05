@@ -41,7 +41,7 @@ const likePost = async(req, res) => {
 }
 
 
-const dislikePost = async(req, res) => {
+const unlikePost = async(req, res) => {
     const { userId, postId } = req.body;
     try {
         const user = await User.findById(userId);
@@ -87,4 +87,4 @@ const commentPost = async(req, res) => {
 }
 
 
-module.exports = { createPost, likePost, dislikePost, commentPost };
+module.exports = { createPost, likePost, unlikePost, commentPost };

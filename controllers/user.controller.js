@@ -193,7 +193,14 @@ const fetchUserFollowing = async(req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
-
+const getUserFeed = async(req, res) => {
+    try {
+        const { user } = req;
+        let feed = [];
+        let posts = await Post.find({ author: user._id });
+        feed.push(posts);
+    }
+}
 
 module.exports = {
     login,
