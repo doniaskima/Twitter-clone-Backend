@@ -115,6 +115,23 @@ const fetchLikes = async(req, res) => {
     }
 };
 
+const fetchComments = async(req, res) => {
+    try {
+        const postId = req.params.postId;
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.json({
+                success: false,
+                message: "Invalid Id, post not found",
+            });
+        }
+        const comments = await Comment.find({ postId: post._id });
+        return res.status(200).json({ success: true, comments: comments });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
 
 
-module.exports = { fetchLikes, deletePost, createPost, likePost, unlikePost, commentPost };
+
+module.exports = { fetchLikes, deletePost, createPost, likePost, unlikePost, commentPost, fetchComments };
