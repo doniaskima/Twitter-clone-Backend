@@ -86,5 +86,15 @@ const commentPost = async(req, res) => {
     }
 }
 
+const deletePost = async(req, res) => {
+    try {
+        const postId = req.params.postId;
+        await Post.findByIdAndDelete(postId);
+        return res.status(200).json({ success: true, message: "post deleted" });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 
 module.exports = { createPost, likePost, unlikePost, commentPost };
