@@ -96,5 +96,25 @@ const deletePost = async(req, res) => {
     }
 };
 
+const fetchLikes = async(req, res) => {
+    try {
+        const postId = req.params.postId;
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.json({
+                success: false,
+                message: "Invalid Id, post not found",
+            });
+        }
+        const likes = await User.find({ _id: { $in: post.likes } },
+            "_id name username"
+        );
+        return res.status(200).json({ success: true, likes: likes });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
 
-module.exports = { createPost, likePost, unlikePost, commentPost };
+
+
+module.exports = { fetchLikes, deletePost, createPost, likePost, unlikePost, commentPost };
