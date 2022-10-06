@@ -1,9 +1,10 @@
 require("dotenv").config();
-const { User } = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { extend } = require("lodash");
 const { newNotification } = require("./notification.controller");
+const User = require("../models/user.model");
+const Post = require("../models/post.model");
 
 const login = async(req, res) => {
     const { email, password } = req.body;
@@ -15,7 +16,7 @@ const login = async(req, res) => {
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (isPasswordCorrect) {
             const token = jwt.sign({ id: user._id, name: user.name },
-                process.env.secret
+                process.env.JWT_SECRET
             );
             return res.json({
                 success: true,
@@ -40,7 +41,7 @@ const login = async(req, res) => {
 };
 const signup = async(req, res) => {
     const { name, username, email, password } = req.body;
-    const user = await User.findOne({ email: email }).catch((err) => {
+    let user = await User.findOne({ email: email }).catch((err) => {
         console.log(err);
     });
     if (user) {
@@ -50,6 +51,17 @@ const signup = async(req, res) => {
             success: false,
             message: "Account with email already exists, Try logging in instead!",
         });
+    }
+    user = await User.finOe({ username: username }).catch((err) => {
+        console.log(err);
+    });
+    if (user) {
+        return res.json({
+            token: null,
+            user: null,
+            success: false,
+            message: "Account with username already exists"
+        })
     }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -62,7 +74,7 @@ const signup = async(req, res) => {
 
         const savedUser = await newUser.save();
         const token = jwt.sign({ id: savedUser._id, name: savedUser.name },
-            process.env.secret
+            process.env.JWT_SECRET
         );
 
         return res.json({
@@ -141,6 +153,7 @@ const follow = async(req, res) => {
         await newNotification(targetId, sourceId, "NEW_FOLLOWER", 0);
         targetUser.followers.push(sourceId);
         sourceUser.following.push(targetUser);
+        return res.json({ success: true, targetUserId: targetUser._id });
         await targetUser.save();
         await sourceUser.save();
     } catch (error) {
@@ -195,14 +208,7 @@ const fetchUserFollowing = async(req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
-const getUserFeed = async(req, res) => {
-    try {
-        const { user } = req;
-        let feed = [];
-        let posts = await Post.find({ author: user._id });
-        feed.push(posts);
-    }
-}
+
 
 module.exports = {
     login,
