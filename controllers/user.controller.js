@@ -3,6 +3,7 @@ const { User } = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { extend } = require("lodash");
+const { newNotification } = require("./notification.controller");
 
 const login = async(req, res) => {
     const { email, password } = req.body;
@@ -137,6 +138,7 @@ const follow = async(req, res) => {
                 message: "Invalid Target Id",
             });
         }
+        await newNotification(targetId, sourceId, "NEW_FOLLOWER", 0);
         targetUser.followers.push(sourceId);
         sourceUser.following.push(targetUser);
         await targetUser.save();
