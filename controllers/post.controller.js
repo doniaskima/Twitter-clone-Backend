@@ -79,9 +79,11 @@ const commentPost = async(req, res) => {
             postId: post._id,
         });
         await newComment.save();
+        await newNotification(post.author, user._id, "NEW_COMMENT", postId);
         return res.status(200).json({
             success: true,
-            message: "comment added"
+            message: "comment added",
+            comment: comment
         });
     } catch (error) {
         return res.status(500).json({ success: true, message: error.message });
