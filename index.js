@@ -5,6 +5,9 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 const cors = require("cors");
 const compression = require("compression");
+//import Routes 
+const userRouter = require("./routers/user.router");
+const postRouter = require("./routers/post.router");
 
 const app = express();
 //DB connection
@@ -18,6 +21,9 @@ mongoose.connection.on("error", (err) => {
 app.get("/", (req, res) => {
     return res.send({ message: "Welcome :))" });
 });
+
+app.use("/users", userRouter);
+app.use("/posts", postRouter);
 
 
 //middleware
