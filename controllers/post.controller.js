@@ -1,7 +1,7 @@
 const { User } = require("../models/user.model");
 const { Post } = require("../models/post.model");
 const { Comment } = require("../models/comment.model");
-
+const { newNotification } = require("./notification.controller");
 
 const createPost = async(req, res) => {
     const { author, content } = req.body;
@@ -28,10 +28,12 @@ const likePost = async(req, res) => {
         if (!user) {
             return res.json({ success: false, message: "User not found !" })
         }
+        await
         const post = await Post.findById(postId)
         if (!post) {
             return res.json({ success: false, message: "User not found" })
         }
+        await newNotification(post.author, user._id, "LIKED", postId);
         post.likes.push(user._id);
         await post.save();
         return res.status(200).json({ success: true, message: "post liked" });

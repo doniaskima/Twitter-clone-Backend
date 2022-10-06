@@ -20,7 +20,6 @@ const newNotification = async(targetId, sourceId, type, postId) => {
                 postId: postId,
             });
         }
-
         await notification.save();
     } catch (error) {
         console.log(error);
