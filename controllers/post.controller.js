@@ -170,9 +170,28 @@ const updatePost = async(req, res) => {
     }
 }
 
+const fetchSinglePage = async(req, res) => {
+    try {
+        const posstId = req.params.postId;
+        const post = await Post.findById(postId);
+        const user = await User.findById(post.author);
+        return res.status(200).json({
+            success: true,
+            message: "requested post fetched",
+            post: {
+                ...post._doc,
+                authorName: user.name,
+                authorUsername: user.username,
+            },
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
 const deletComment = async(req, res) => {
     // here write code 
 }
 
 
-module.exports = { fetchLikes, deletComment, deletePost, createPost, likePost, unlikePost, commentPost, fetchComments, updatePost };
+module.exports = { fetchLikes, fetchSinglePage, deletComment, deletePost, createPost, likePost, unlikePost, commentPost, fetchComments, updatePost };
