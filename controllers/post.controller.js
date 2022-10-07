@@ -203,6 +203,14 @@ const deleteComment = async(req, res) => {
                 return res.json({ success: false, message: "User not found" })
             }
             await Comment.findByIdAndDelete(comment._id);
+            const index = post.comments.indexOf(commentId);
+            post.comments.splice(index, 1);
+            await post.save();
+            return res.status(200).json({
+                success: true,
+                message: "comment deleted",
+                commentId: commentId,
+            });
         } catch (error) {
             console.log(error);
             return res.status(500).json({ success: false, message: error.message });
