@@ -191,31 +191,31 @@ const fetchSinglePage = async(req, res) => {
 
 const deleteComment = async(req, res) => {
 
-    const commentId = async(req, res) => {
-        const comment = req.params.commentId;
-        try {
-            const comment = await Comment.findById(commentId);
-            if (!comment) {
-                return res.json({ success: false, message: "comment not found" });
-            }
-            const post = await Post.findById(comment.postId);
-            if (!post) {
-                return res.json({ success: false, message: "User not found" })
-            }
-            await Comment.findByIdAndDelete(comment._id);
-            const index = post.comments.indexOf(commentId);
-            post.comments.splice(index, 1);
-            await post.save();
-            return res.status(200).json({
-                success: true,
-                message: "comment deleted",
-                commentId: commentId,
-            });
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({ success: false, message: error.message });
+    const commentId = req.params.commentId;
+
+    try {
+        const comment = await Comment.findById(commentId);
+        if (!comment) {
+            return res.json({ success: false, message: "comment not found" });
         }
+        const post = await Post.findById(comment.postId);
+        if (!post) {
+            return res.json({ success: false, message: "User not found" })
+        }
+        await Comment.findByIdAndDelete(comment._id);
+        const index = post.comments.indexOf(commentId);
+        post.comments.splice(index, 1);
+        await post.save();
+        return res.status(200).json({
+            success: true,
+            message: "comment deleted",
+            commentId: commentId,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: error.message });
     }
+}
 }
 
 
