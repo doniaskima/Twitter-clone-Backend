@@ -170,5 +170,9 @@ const updatePost = async(req, res) => {
     }
 }
 
+const deletComment = async(req, res) => {
+    // here write code 
+}
 
-module.exports = { fetchLikes, deletePost, createPost, likePost, unlikePost, commentPost, fetchComments, updatePost };
+
+module.exports = { fetchLikes, deletComment, deletePost, createPost, likePost, unlikePost, commentPost, fetchComments, updatePost };
