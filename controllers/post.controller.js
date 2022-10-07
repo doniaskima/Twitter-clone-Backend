@@ -189,9 +189,26 @@ const fetchSinglePage = async(req, res) => {
     }
 }
 
-const deletComment = async(req, res) => {
-    // here write code 
+const deleteComment = async(req, res) => {
+
+    const commentId = async(req, res) => {
+        const comment = req.params.commentId;
+        try {
+            const comment = await Comment.findById(commentId);
+            if (!comment) {
+                return res.json({ success: false, message: "comment not found" });
+            }
+            const post = await Post.findById(comment.postId);
+            if (!post) {
+                return res.json({ success: false, message: "User not found" })
+            }
+            await Comment.findByIdAndDelete(comment._id);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ success: false, message: error.message });
+        }
+    }
 }
 
 
-module.exports = { fetchLikes, fetchSinglePage, deletComment, deletePost, createPost, likePost, unlikePost, commentPost, fetchComments, updatePost };
+module.exports = { fetchLikes, fetchSinglePage, deleteComment, deletePost, createPost, likePost, unlikePost, commentPost, fetchComments, updatePost };
