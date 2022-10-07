@@ -149,6 +149,26 @@ const fetchComments = async(req, res) => {
     }
 };
 
+const updatePost = async(req, res) => {
+    try {
+        const { postId, content } = req.body;
+        const post = await Post.findById(postId);
+        const user = await User.findById(post.author);
+        post.content = content;
+        return res.status(200).json({
+            success: true,
+            message: "requested post fetched",
+            post: {
+                ...post._doc,
+                authorName: user.name,
+                authorUsername: user.username,
+            },
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+
+    }
+}
 
 
-module.exports = { fetchLikes, deletePost, createPost, likePost, unlikePost, commentPost, fetchComments };
+module.exports = { fetchLikes, deletePost, createPost, likePost, unlikePost, commentPost, fetchComments, updatePost };
