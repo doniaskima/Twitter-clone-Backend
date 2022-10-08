@@ -209,6 +209,15 @@ const fetchUserFollowing = async(req, res) => {
     }
 };
 
+const getUserFeed = (req, res) => {
+    try {
+        const { user } = req;
+        let tempFeed = [];
+        let posts = await Post.find({ author: user._id });
+        tempFeed.push(posts);
+    }
+}
+
 
 module.exports = {
     login,
@@ -219,5 +228,6 @@ module.exports = {
     fetchUserPosts,
     getSingleUserInfo,
     fetchUserFollowers,
-    fetchUserFollowing
+    fetchUserFollowing,
+    getUserFeed,
 };
