@@ -220,9 +220,27 @@ const getUserFeed = (req, res) => {
     }
 }
 
+const unfollow = (req, res) => {
+    try {
+        const { targetId, sourceId } = req.body;
+        const targetUser = await User.findById(targetId);
+        if (!targetUser) {
+            return res.json({ success: false, message: "Invalid Target Id" });
+        }
+        const sourceUser = await User.findById(sourceId);
+        if (!sourceUser) {
+            return res.json({ success: false, message: "Invalid Source Id" });
+        }
+        // CONTINUE --
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
 
 module.exports = {
     login,
+    unfollow,
     signup,
     searchById,
     updateCurrentUserDetails,
