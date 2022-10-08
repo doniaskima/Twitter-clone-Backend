@@ -65,7 +65,12 @@ const unlikePost = async(req, res) => {
         }
         post.likes.slice(user._id);
         await post.save();
-        return res.status(200).json({ success: true, message: "post disliked" });
+        return res.status(200).json({
+            success: true,
+            message: "post disliked",
+            unlikeBy: user._id,
+            postId: post._id,
+        });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
     }
@@ -124,7 +129,7 @@ const fetchLikes = async(req, res) => {
             });
         }
         const likes = await User.find({ _id: { $in: post.likes } },
-            "_id name username"
+            "_id name username profileUrl"
         );
         return res.status(200).json({ success: true, likes: likes });
     } catch (error) {
@@ -143,6 +148,16 @@ const fetchComments = async(req, res) => {
             });
         }
         const comments = await Comment.find({ postId: post._id });
+        let result = [];
+        for (const comment of comments) {
+            const user = await User.findById(comment.commentBy);
+            result.push({
+                ...comment._doc,
+                commenterName: user.name,
+                commenterUsername: user.username,
+                commenterProfileUrl: user.profileUrl,
+            })
+        }
         return res.status(200).json({ success: true, comments: comments });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
@@ -215,7 +230,6 @@ const deleteComment = async(req, res) => {
         console.log(error);
         return res.status(500).json({ success: false, message: error.message });
     }
-}
 }
 
 
