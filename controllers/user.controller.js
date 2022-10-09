@@ -260,6 +260,17 @@ const unfollow = (req, res) => {
     }
 }
 
+const fetchRecentlyJoinedUsers = async(req, res) => {
+    try {
+        // write code doniaaaaaaa 
+    } catch (error) {
+        return res.statuc(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 
 module.exports = {
     login,
@@ -273,4 +284,5 @@ module.exports = {
     fetchUserFollowers,
     fetchUserFollowing,
     getUserFeed,
+    fetchRecentlyJoinedUsers
 };
