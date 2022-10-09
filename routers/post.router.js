@@ -11,6 +11,7 @@ const {
     deleteComment,
     fetchSinglePost,
     updatePost,
+    unFollow,
 } = require("../controllers/post.controller");
 
 router.route("/new").post(createPost);
@@ -22,4 +23,5 @@ router.route("/dislike").post(unlikePost);
 router.route("/likes/:postId").get(fetchLikes);
 router.route("/comments/postId").get(fetchComments);
 router.route("/update-post").put(updatePost);
-router.route("delete/:postId").delete(deletePost)
+router.route("delete/:postId").delete(deletePost);
+router.route("/unfollow").post(unFollow);

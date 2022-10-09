@@ -231,7 +231,18 @@ const unfollow = (req, res) => {
         if (!sourceUser) {
             return res.json({ success: false, message: "Invalid Source Id" });
         }
-        // CONTINUE --
+        let index = targetUser.followers.indexOf(sourceId);
+        if (index === -1) {
+            return res.json({
+                success: false,
+                message: "source user  not follows target user",
+            })
+        }
+        targetUser.followers.splice(index, 1);
+        index = sourceUser.following.indexOf(targetId);
+        sourceUser.following.splice(index, 1);
+        await targetUser.save();
+        await sourceUser.save();
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
