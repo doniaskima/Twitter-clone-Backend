@@ -165,8 +165,20 @@ const follow = async(req, res) => {
 
 const fetchUserPosts = async(req, res) => {
     try {
-        const { user } = req;
+        const { userId, clientId } = req;
+        const user = await User.findById(userId);
         const posts = await Post.find({ author: user._id });
+        let userPosts = [];
+        for (const post of posts) {
+            const isLikedByUser = post.likes.some((id) => id.toString() === clientId.toString());
+            userPosts.push({
+                ...post._doc,
+                isLikedByUser: isLikedByUser,
+                authorName: user.name,
+                authorUsername: user.username,
+                authorProfileUrl: user.profileUrl,
+            })
+        }
         return res.json({ success: true, posts: posts });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
