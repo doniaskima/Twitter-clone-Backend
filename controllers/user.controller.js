@@ -290,7 +290,9 @@ const getUserFeed = async(req, res) => {
                 authorProfileUrl: author.profileUrl,
             });
         }
-
+        feed.sort((a, b) => {
+            return newDate(b.createdAt) - newDate(a.createdAt)
+        });
         return res.json({ success: true, feed: feed })
     } catch (error) {
         console.log(error);
