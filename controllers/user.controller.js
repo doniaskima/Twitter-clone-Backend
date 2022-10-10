@@ -52,7 +52,7 @@ const signup = async(req, res) => {
             message: "Account with email already exists, Try logging in instead!",
         });
     }
-    user = await User.finOe({ username: username }).catch((err) => {
+    user = await User.findOne({ username: username }).catch((err) => {
         console.log(err);
     });
     if (user) {
@@ -223,14 +223,6 @@ const fetchUserFollowing = async(req, res) => {
     }
 };
 
-const getUserFeed = (req, res) => {
-    try {
-        const { user } = req;
-        let tempFeed = [];
-        let posts = await Post.find({ author: user._id });
-        tempFeed.push(posts);
-    }
-}
 
 const unfollow = (req, res) => {
     try {
@@ -260,16 +252,7 @@ const unfollow = (req, res) => {
     }
 }
 
-const fetchRecentlyJoinedUsers = async(req, res) => {
-    try {
-        // write code doniaaaaaaa 
-    } catch (error) {
-        return res.statuc(500).json({
-            success: false,
-            message: error.message
-        })
-    }
-}
+
 
 
 module.exports = {
