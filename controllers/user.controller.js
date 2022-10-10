@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { extend } = require("lodash");
 const { newNotification } = require("./notification.controller");
-const User = require("../models/user.model");
+const User = require("../models/usker.model");
 const Post = require("../models/post.model");
 
 const login = async(req, res) => {
@@ -267,6 +267,15 @@ const searchUser = async(req, res) => {
     }
 };
 
+const getUserChats = async(req, res) => {
+    const user = req.userProfile;
+    const
+    const data = await User.find({ _id: { $in: user.chats } },
+        "_id name username email profileUrl"
+    ).catch((err) => console.log(err));
+    return res.status(200).json({ success: true, chats: data })
+}
+
 
 
 
@@ -281,5 +290,6 @@ module.exports = {
     getSingleUserInfo,
     fetchUserFollowers,
     fetchUserFollowing,
-    searchUser
+    searchUser,
+    getUserChats
 };
