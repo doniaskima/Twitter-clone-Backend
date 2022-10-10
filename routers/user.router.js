@@ -9,6 +9,7 @@ const {
     signup,
     updateCurrentUserDetails,
     fetchUserPosts,
+    searchUser,
     follow,
 } = require("../controllers/user.controllers");
 
@@ -20,4 +21,5 @@ router.param("userId", searchById);
 router.route("/get-user-posts/:userId").get(fetchUserPosts);
 router.route("/update/:userId").put(updateCurrentUserDetails);
 router.route("/notifications/:userId").get(fetchUserNotifications);
+router.route("/search").get(searchUser);
 module.exports = router;

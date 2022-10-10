@@ -128,7 +128,7 @@ const updateCurrentUserDetails = async(req, res) => {
 
         user = extend(user, userUpdate);
         user = await user.save();
-        res.json({ success: true, data: user });
+        res.json({ success: true, user: user });
     } catch (err) {
         res.json({
             success: false,
@@ -251,6 +251,21 @@ const unfollow = (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 }
+const searchUser = async(req, res) => {
+    try {
+        const search = req.query.text;
+        const users = await User.find({ $text: { $search: search } }).select(
+            "id name username profileUrl"
+        );
+        if (users.length === 0) {
+            return res.json({ success: false, message: "No results" });
+        }
+        return res.json({ success: true, users: users });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
 
 
 
@@ -266,6 +281,5 @@ module.exports = {
     getSingleUserInfo,
     fetchUserFollowers,
     fetchUserFollowing,
-    getUserFeed,
-    fetchRecentlyJoinedUsers
+    searchUser
 };
