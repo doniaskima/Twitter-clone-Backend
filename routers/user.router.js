@@ -12,6 +12,7 @@ const {
     searchUser,
     follow,
     getUserChats,
+    getUserFeed,
 } = require("../controllers/user.controllers");
 
 router.route("/login").post(login);
@@ -23,4 +24,5 @@ router.route("/get-user-posts/:userId").get(fetchUserPosts);
 router.route("/update/:userId").put(updateCurrentUserDetails);
 router.route("/notifications/:userId").get(fetchUserNotifications);
 router.route("/search").get(searchUser);
+router.route("/feed/:userId").get(getUserFeed);
 module.exports = router;

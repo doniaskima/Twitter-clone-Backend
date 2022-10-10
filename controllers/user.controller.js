@@ -307,4 +307,5 @@ module.exports = {
     fetchUserFollowing,
     searchUser,
     getUserChats
+    getUserFeed,
 };
