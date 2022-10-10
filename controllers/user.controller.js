@@ -275,7 +275,10 @@ const getUserFeed = async(req, res) => {
         for (const _user of user.following) {
             posts = await Post.find({ author: _user._id });
             tempFeed.push(posts);
+
         }
+        tempFeed = tempFeed.flat();
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({ success: false, message: error.message });
@@ -307,5 +310,4 @@ module.exports = {
     fetchUserFollowing,
     searchUser,
     getUserChats
-    getUserFeed,
 };
