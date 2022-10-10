@@ -10,9 +10,9 @@ const {
     updateCurrentUserDetails,
     fetchUserPosts,
     searchUser,
+    getUserFeed,
     follow,
     getUserChats,
-    getUserFeed,
 } = require("../controllers/user.controllers");
 
 router.route("/login").post(login);
