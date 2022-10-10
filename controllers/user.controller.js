@@ -266,6 +266,21 @@ const searchUser = async(req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+const getUserFeed = async(req, res) => {
+    try {
+        const user = req.userProfile;
+        let tempFeed = [];
+        let posts = await Post.find({ author: user._id });
+        tempFeed.push(posts);
+        for (const _user of user.following) {
+            posts = await Post.find({ author: _user._id });
+            tempFeed.push(posts);
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
 
 const getUserChats = async(req, res) => {
     const user = req.userProfile;

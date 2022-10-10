@@ -17,7 +17,6 @@ const {
 router.route("/login").post(login);
 router.route("/signup").post(signup);
 router.route("/follow").post(follow);
-
 router.param("userId", searchById);
 router.route("/chats/:userId", getUserChats)
 router.route("/get-user-posts/:userId").get(fetchUserPosts);
