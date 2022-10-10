@@ -11,6 +11,7 @@ const {
     fetchUserPosts,
     searchUser,
     follow,
+    getUserChats,
 } = require("../controllers/user.controllers");
 
 router.route("/login").post(login);
@@ -18,6 +19,7 @@ router.route("/signup").post(signup);
 router.route("/follow").post(follow);
 
 router.param("userId", searchById);
+router.route("/chats/:userId", getUserChats)
 router.route("/get-user-posts/:userId").get(fetchUserPosts);
 router.route("/update/:userId").put(updateCurrentUserDetails);
 router.route("/notifications/:userId").get(fetchUserNotifications);
