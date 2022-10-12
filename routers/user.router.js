@@ -20,6 +20,7 @@ const {
     searchUser,
     getUserChats,
 } = require("../controllers/user.controllers");
+const { fetchRecentlyJoinedUsers } = require("../controllers/user.controller");
 
 router.route("/login").post(login);
 router.route("/signup").post(signup);
@@ -35,6 +36,7 @@ router.route("/followers").post(authenticate, fetchUserFollowers);
 router.route("/following").post(authenticate, fetchUserFollowing);
 router.route("/get-user-posts").post(authenticate, fetchUserPosts);
 router.route("/update/:userId").put(authenticate, updateCurrentUserDetails);
-
+router.route("/notifications/:userId").get(fetchUserNotifications);
+router.route("/get-recently-joined-users:userId").get(fetchRecentlyJoinedUsers);
 
 module.exports = router;

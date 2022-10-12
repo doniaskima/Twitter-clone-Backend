@@ -254,6 +254,7 @@ const fetchUserFollowing = async(req, res) => {
     }
 };
 
+
 const getUserFeed = async(req, res) => {
     try {
         const user = req.userProfile;
