@@ -3,13 +3,25 @@ const port = process.env.PORT || 3000;
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
+const http = require("http");
+const socketio = require("socket.io");
 const cors = require("cors");
 const compression = require("compression");
 //import Routes 
 const userRouter = require("./routers/user.router");
 const postRouter = require("./routers/post.router");
 
+const messageRouter = require("./routers/message.router");
+const {
+    createMessage,
+    startMessage,
+} = require("./controllers/message.controller");
+
+
 const app = express();
+
+const server = http.createServer(app);
+const io = socketio(server, { cors: true });
 //DB connection
 mongoose.connect(process.env.MONGO_DB_URI);
 mongoose.connection.on("connected", () => {
@@ -24,6 +36,7 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
+app.use("/messages", messageRouter);
 
 
 //middleware
