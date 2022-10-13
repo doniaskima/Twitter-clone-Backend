@@ -34,6 +34,19 @@ app.get("/", (req, res) => {
     return res.send({ message: "Welcome :))" });
 });
 
+let connectedUsers = new Map();
+
+io.on("connection", (socket) => {
+    let { id } = socket.client;
+    socket.on("connectUser", ({ name }) => {
+        //  When the client sends 'name', we store the 'name',
+        //  'socket.client.id', and 'socket.id in a Map structure
+        console.log(name, socket.client.id, socket.id);
+        connectedUsers.set(name, [socket.client.id, socket.id]);
+        io.emit("onlineUsers", Array.from(connectedUsers.keys()));
+    });
+})
+
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/messages", messageRouter);
