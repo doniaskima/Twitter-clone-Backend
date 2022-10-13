@@ -38,6 +38,7 @@ let connectedUsers = new Map();
 
 io.on("connection", (socket) => {
     let { id } = socket.client;
+    //Connection
     socket.on("connectUser", ({ name }) => {
         //  When the client sends 'name', we store the 'name',
         //  'socket.client.id', and 'socket.id in a Map structure
@@ -45,6 +46,17 @@ io.on("connection", (socket) => {
         connectedUsers.set(name, [socket.client.id, socket.id]);
         io.emit("onlineUsers", Array.from(connectedUsers.keys()));
     });
+    //disconnection
+    socket.on("disconnect", () => {
+        for (let key of connectedUsers.keys()) {
+            if (connectedUsers.get(key)[0] === id) {
+                connectedUsers.delete(key);
+                break;
+            }
+        }
+        io.emit("onlineUsers", Array.from(connectedUsers.keys()));
+    });
+
 })
 
 app.use("/users", userRouter);
