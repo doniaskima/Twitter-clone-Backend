@@ -62,6 +62,21 @@ io.on("connection", (socket) => {
         startMessage(senderId, receiverEmail);
     });
 
+    socket.on("sendMessage", ({ sender, receiver, message }) => {
+        const { email, name } = receiver;
+        let receiverSocketId = connectedUsers.get(name) === undefined ? false : connectedUsers.get(name)[1];
+        let senderSocketId = connectedUsers.get(sender.name)[1];
+        createMessage(sender._id, email, message).then(({ info, isNewRecipient }) => {
+            if (isNewRecipient && receiverSocketId) {
+                io.to(receiverSocketId).emit("newRecipient", info.sender);
+            } else if (receiverSocketId) {
+                io.to(receiverSocketId).emit("message", info)
+            }
+            io.to(senderSocketId).emit("message", info);
+        });
+    });
+
+
 });
 
 app.use("/users", userRouter);
