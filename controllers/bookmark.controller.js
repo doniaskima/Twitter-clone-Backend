@@ -37,9 +37,36 @@ const unbookmarkPost = async(req, res) => {
 }
 
 
+const getBookmarkedPosts = async(req, res) => {
+    try {
+        const bookmarks = await bookmarkModels.aggregate([{
+                $match: { user: mongoose.Types.ObjectId(req.verifiedUser._id) },
+            },
+            {
+                $lookup: {
+                    from: "posts",
+                    localField: "post",
+                    foreignField: "_id",
+                    as: "post",
+                },
+            },
+            { $unwind: "$post" },
+            {
+                $project: {
+                    post: 1,
+                },
+            },
+        ]);
+        return res.status(200).json(bookmarks);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+};
+
 
 
 
 
 module.exports.bookmarkPost = bookmarkPost;
 module.exports.unbookmarkPost = unbookmarkPost;
+module.exports.getBookmarkedPosts = getBookmarkedPosts;
