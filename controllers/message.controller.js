@@ -132,7 +132,7 @@ const getMessages = (req, res) => {
         if (err) {
             return res.status(500).json({ success: false, message: err.message });
         } else if (!user) {
-            return res.json({ success: false, message: "unser not exist" })
+            return res.json({ success: false, message: "user not exist" })
         } else {
             User.findOne({ _id: receiverId }, (err, receiver) => {
                 if (err) {
