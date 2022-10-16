@@ -125,8 +125,30 @@ const deleteMessages = (senderId, receiverId) => {
         });
 };
 
+
+const getMessages = (req, res) => {
+    const { userId, receiverId } = req.body;
+    User.findOne({ _id: userId }, (err, user) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: err.message });
+        } else if (!user) {
+            return res.json({ success: false, message: "unser not exist" })
+        } else {
+            User.findOne({ _id: receiverId }, (err, receiver) => {
+                if (err) {
+                    return res.status(500).json({ success: false, message: err.message })
+                } else if (!receiver) {
+                    return res.status().json({ success: false, message: "receiver not exist" });
+                } else {
+                    Message.find({ sender: userId, receiver: receiverId })
+                }
+            })
+        }
+    })
+}
 module.exports = {
     createMessage,
     deleteMessageById,
     startMessage,
+    getMessages,
 }
