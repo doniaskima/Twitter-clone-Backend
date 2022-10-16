@@ -18,7 +18,29 @@ const encrypt = (message) => {
         key: key.toString("hex"),
     };
 };
-
+const startMessage = async(senderId, receiverEmail) => {
+    const user = await User.findOne({ _id: senderId });
+    if (user) {
+        const receiver = await User.findOne({ email: receiverEmail });
+        if (receiver) {
+            if (!user.chats.includes(senderId) && user._id !== receiver._id) {
+                user.chats.push(receiver._id);
+                await user
+                    .save()
+                    .then(() => {
+                        return true;
+                    })
+                    .catch(() => {
+                        return null;
+                    });
+            }
+        } else {
+            return null;
+        }
+    } else {
+        return null;
+    }
+};
 
 const createMessage = async(senderId, receiverEmail, message) => {
     let info = null;
@@ -86,4 +108,5 @@ const deleteMessageById = async(req, res) => {
 module.exports = {
     createMessage,
     deleteMessageById,
+    startMessage,
 }
