@@ -104,6 +104,26 @@ const deleteMessageById = async(req, res) => {
     });
 };
 
+const deleteMessages = (senderId, receiverId) => {
+    Message.deleteMany({ sender: senderId, receiver: receiverId })
+        .then(() => {
+            Message.deleteMany({
+                    receiver: senderId,
+                    sender: receiverId,
+                })
+                .then(() => {
+                    return true;
+                })
+                .catch((err) => {
+                    console.log(err);
+                    return false;
+                });
+        })
+        .catch((err) => {
+            console.log(err);
+            return false;
+        });
+};
 
 module.exports = {
     createMessage,
