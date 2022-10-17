@@ -1,5 +1,5 @@
 {
-    "name": "twitter",
+    "name": "twitter-clone",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -7,7 +7,7 @@
         "start": "node index.js",
         "dev": "nodemon index.js"
     },
-    "author": "",
+    "author": "Donia Skima",
     "license": "ISC",
     "dependencies": {
         "bcrypt": "^5.0.1",

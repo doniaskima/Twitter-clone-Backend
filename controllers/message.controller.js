@@ -126,10 +126,28 @@ const deleteMessages = (senderId, receiverId) => {
 };
 
 
+const deleteChatByRecipientId = async(req, res) => {
+    const { senderId, recipientId } = req.body;
+
+    const user = await User.findOne({ _id: senderId }).catch((err) => {
+        return res.json({ success: false, message: err.message });
+    });
+    deleteMessages(senderId, recipientId);
+    if (user) {
+        const index = user.chats.indexOf(recipientId);
+        console.log(user.chats);
+        user.chats.splice(index, 1);
+        console.log(user.chats);
+        await user.save();
+        return res.json({ success: true, recipientId: recipientId });
+    }
+    return res.json({ success: false, message: "something is wrong" });
+};
 
 module.exports = {
+    getMessages,
     createMessage,
     deleteMessageById,
     startMessage,
-
-}
+    deleteChatByRecipientId,
+};

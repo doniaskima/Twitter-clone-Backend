@@ -65,7 +65,8 @@ const getBookmarkedPosts = async(req, res) => {
 
 //The 
 // $project
-// takes a document that can specify the inclusion of fields, the suppression of the _id field, the addition of new fields, and the resetting of the values of existing fields.Alternatively, you may specify the exclusion of fields.
+// takes a document that can specify the inclusion of fields, the suppression of the _id field, the addition of new fields, 
+//and the resetting of the values of existing fields.Alternatively, you may specify the exclusion of fields.
 
 
 
