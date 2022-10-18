@@ -19,7 +19,7 @@ const {
     getSingleUserInfo,
     searchUser,
     getUserChats,
-} = require("../controllers/user.controllers");
+} = require("../controllers/user.controller");
 const { fetchRecentlyJoinedUsers } = require("../controllers/user.controller");
 
 router.route("/login").post(login);

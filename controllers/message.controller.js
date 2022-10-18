@@ -145,7 +145,7 @@ const deleteChatByRecipientId = async(req, res) => {
 };
 
 module.exports = {
-    getMessages,
+
     createMessage,
     deleteMessageById,
     startMessage,

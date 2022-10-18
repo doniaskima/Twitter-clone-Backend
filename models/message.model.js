@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
+
 const messageSchema = new mongoose.Schema({
     sender: {
         type: mongoose.Schema.Types.ObjectId,
@@ -7,6 +7,10 @@ const messageSchema = new mongoose.Schema({
     },
     receiver: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,
+    },
+    iv: {
+        type: String,
         required: true,
     },
     message: {
