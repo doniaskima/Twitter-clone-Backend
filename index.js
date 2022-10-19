@@ -93,5 +93,5 @@ app.use(compression());
 
 //server listening
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+    console.log(`backend server running on port ${port}`);
 });
