@@ -20,12 +20,14 @@ const {
     fetchRecentlyJoinedUsers,
     searchUser,
     getUserChats,
-} = require("../controllers/user.controller");
+} = require("../controllers/user.controllers");
+
 router.route("/login").post(login);
 router.route("/signup").post(signup);
 router.route("/follow").post(authenticate, follow);
 router.route("/unfollow").post(authenticate, unFollow);
 router.route("/search").get(authenticate, searchUser);
+
 router.param("userId", searchById);
 router.route("/:userId").get(authenticate, getSingleUserInfo);
 router.route("/chats/:userId").get(authenticate, getUserChats);
