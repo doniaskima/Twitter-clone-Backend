@@ -62,10 +62,11 @@ const signup = async (req, res) => {
     const token = jwt.sign({ _id: savedUser._id }, process.env.TOKEN_KEY, {
       expiresIn: "1h",
     });
+
     await transporter.sendMail({
       from: "Twitter@clone-Twitter.com",
       to: savedUser.email,
-      subject: "verify email",
+      subject: "Twitter Notification - Forgotten Password",
       body: `<p>${token}</p>`,
     });
 
