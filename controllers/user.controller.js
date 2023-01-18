@@ -70,7 +70,7 @@ const signup = async(req, res) => {
             username: username,
             email: email,
             password: hashedPassword,
-            bio: "Hi there I'm using Donia's Twitter Clone",
+            bio: "Hi there! I'm using Donia's Twitter clone",
             profileUrl: "https://res.cloudinary.com/formula-web-apps/image/upload/v1623766149/148-1486972_mystery-man-avatar-circle-clipart_kldmy3.jpg",
         });
 
@@ -122,6 +122,32 @@ const getSingleUserInfo = async(req, res) => {
             success: false,
             message: "Failed to Update User",
             errorMessage: error.message,
+        });
+    }
+};
+
+const updateCurrentUserDetails = async(req, res) => {
+    try {
+        let userUpdate = req.body;
+        let user = req.userProfile;
+
+        let search = await User.findOne({ username: userUpdate.username });
+
+        if (search && search.email !== user.email) {
+            return res.json({
+                success: false,
+                errorMessage: "Username already exists",
+            });
+        }
+
+        user = extend(user, userUpdate);
+        user = await user.save();
+        res.json({ success: true, user: user });
+    } catch (err) {
+        res.json({
+            success: false,
+            message: "Failed to Update User",
+            errorMessage: err.message,
         });
     }
 };
@@ -254,7 +280,6 @@ const fetchUserFollowing = async(req, res) => {
     }
 };
 
-
 const getUserFeed = async(req, res) => {
     try {
         const user = req.userProfile;
@@ -296,6 +321,7 @@ const fetchRecentlyJoinedUsers = async(req, res) => {
         const users = await User.find({ $and: [{ _id: { $nin: user.following } }, { _id: { $ne: user._id } }] },
             "id name username profileUrl"
         );
+
         return res.json({ success: true, users: users });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
@@ -304,13 +330,18 @@ const fetchRecentlyJoinedUsers = async(req, res) => {
 
 const searchUser = async(req, res) => {
     try {
-        const search = req.query.text;
-        const users = await User.find({ $text: { $search: search } }).select(
-            "id name username profileUrl email"
-        );
+        const query = req.query.text;
+        const users = await User.find({
+            text: {
+                $regex: query,
+                $options: "i"
+            },
+        }).select("id name username profileUrl email");
+        console.log(users);
         if (users.length === 0) {
             return res.json({ success: false, message: "No results" });
         }
+        console.log(users);
         return res.json({ success: true, users: users });
     } catch (error) {
         console.log(error);
@@ -323,32 +354,6 @@ const getUserChats = async(req, res) => {
         "_id name username email profileUrl"
     ).catch((err) => console.log(err));
     return res.status(200).json({ success: true, chats: data });
-};
-
-const updateCurrentUserDetails = async(req, res) => {
-    try {
-        let userUpdate = req.body;
-        let user = req.userProfile;
-
-        let search = await User.findOne({ username: userUpdate.username });
-
-        if (search && search.email !== user.email) {
-            return res.json({
-                success: false,
-                errorMessage: "Username already exists",
-            });
-        }
-
-        user = extend(user, userUpdate);
-        user = await user.save();
-        res.json({ success: true, user: user });
-    } catch (err) {
-        res.json({
-            success: false,
-            message: "Failed to Update User",
-            errorMessage: err.message,
-        });
-    }
 };
 
 module.exports = {
