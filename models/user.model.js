@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema({
     profileUrl: {
         type: String,
     },
+    isEmailVerified: { type: Boolean, default: false },
     chats: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 }, { timestamps: true });
 
