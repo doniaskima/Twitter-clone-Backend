@@ -371,5 +371,5 @@ module.exports = {
     getSingleUserInfo,
     searchUser,
     getUserChats,
-    search,
+
 };
