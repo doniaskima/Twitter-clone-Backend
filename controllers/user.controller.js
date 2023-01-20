@@ -330,11 +330,12 @@ const fetchRecentlyJoinedUsers = async(req, res) => {
 const searchUser = async(req, res) => {
     try {
         const search = req.query.text;
-        console.log(search);
-        const users = await User.find({ $text: { $search: search } }).select(
-            "id name username profileUrl email"
-        );
-        console.log(users);
+        const users = await User.find({
+            $or: [
+                { name: search },
+                { username: search },
+            ],
+        }).select("id name username profileUrl email");
         if (users.length === 0) {
             return res.json({ success: false, message: "No results" });
         }
@@ -353,7 +354,9 @@ const search = async(req, res, next) => {
                 $options: "i",
             },
         } : {};
-        const users = await User.find({...keyword });
+        const users = await User.find({...keyword }).select(
+            "id name username profileUrl email"
+        );
         res.status(200).json(users);
     } catch (err) {
         next(err);
