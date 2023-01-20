@@ -1,5 +1,5 @@
 const express = require("express");
-const authenticate = require("../middleware/authenticate");
+const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
 
 const {
@@ -20,19 +20,12 @@ const {
     fetchRecentlyJoinedUsers,
     searchUser,
     getUserChats,
-    verifyEmail,
-    forgotPassword,
-    resetPassword,
 } = require("../controllers/user.controller");
-
 router.route("/login").post(login);
 router.route("/signup").post(signup);
 router.route("/follow").post(authenticate, follow);
 router.route("/unfollow").post(authenticate, unFollow);
 router.route("/search").get(authenticate, searchUser);
-router.post("/verify", verifyEmail);
-router.post("/forgot", forgotPassword);
-router.post("/reset", resetPassword);
 router.param("userId", searchById);
 router.route("/:userId").get(authenticate, getSingleUserInfo);
 router.route("/chats/:userId").get(authenticate, getUserChats);
