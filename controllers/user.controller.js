@@ -334,7 +334,7 @@ const searchUser = async(req, res) => {
         const users = await User.find({ $text: { $search: search } }).select(
             "id name username profileUrl email"
         );
-        console.log(users)
+        console.log(users);
         if (users.length === 0) {
             return res.json({ success: false, message: "No results" });
         }
@@ -342,6 +342,21 @@ const searchUser = async(req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const search = async(req, res, next) => {
+    try {
+        const keyword = req.query.keyword ? {
+            name: {
+                $regex: req.query.keyword,
+                $options: "i",
+            },
+        } : {};
+        const users = await User.find({...keyword });
+        res.status(200).json(users);
+    } catch (err) {
+        next(err);
     }
 };
 
@@ -368,4 +383,5 @@ module.exports = {
     getSingleUserInfo,
     searchUser,
     getUserChats,
+    search,
 };
