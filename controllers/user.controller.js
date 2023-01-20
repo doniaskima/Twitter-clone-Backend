@@ -332,8 +332,8 @@ const searchUser = async(req, res) => {
         const search = req.query.text;
         const users = await User.find({
             $or: [
-                { name: search },
-                { username: search },
+                { name: search, $options: "i" },
+                { username: search, $options: "i" },
             ],
         }).select("id name username profileUrl email");
         if (users.length === 0) {
@@ -346,22 +346,7 @@ const searchUser = async(req, res) => {
     }
 };
 
-const search = async(req, res, next) => {
-    try {
-        const keyword = req.query.keyword ? {
-            name: {
-                $regex: req.query.keyword,
-                $options: "i",
-            },
-        } : {};
-        const users = await User.find({...keyword }).select(
-            "id name username profileUrl email"
-        );
-        res.status(200).json(users);
-    } catch (err) {
-        next(err);
-    }
-};
+
 
 const getUserChats = async(req, res) => {
     const user = req.userProfile;
